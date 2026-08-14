@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db3_centering
+  Accuracy : 0.0663 ± 0.0122
+  Median   : 0.0674
+  Range    : [0.0469, 0.0901]
+  95% CI   : [0.0581, 0.0745]
+  Random   : 5.9%   Ratio: 1.1x
+  Folds    : 11/11 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db3_centering.json
+========================================================================

@@ -1,0 +1,5 @@
+comparison,method,cohens_d,interpretation,raw_mean,method_mean,n_subjects
+raw_vs_centering,centering,0.0,negligible,0.13080875,0.13080875,40
+raw_vs_coral,coral,1.1066729469516818,large,0.13080875,0.10005917499999999,40
+raw_vs_tca,tca,0.08980600578142393,negligible,0.13080875,0.12825645,40
+raw_vs_sa,sa,0.4049640008738143,small,0.13080875,0.12021864999999998,40

@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db2_sa
+  Accuracy : 0.1202 ± 0.0209
+  Median   : 0.1192
+  Range    : [0.0824, 0.1696]
+  95% CI   : [0.1135, 0.1269]
+  Random   : 5.9%   Ratio: 2.0x
+  Folds    : 40/40 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db2_sa.json
+========================================================================

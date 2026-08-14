@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db2_centering
+  Accuracy : 0.1308 ± 0.0305
+  Median   : 0.1293
+  Range    : [0.0592, 0.1977]
+  95% CI   : [0.1211, 0.1406]
+  Random   : 5.9%   Ratio: 2.2x
+  Folds    : 40/40 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db2_centering.json
+========================================================================

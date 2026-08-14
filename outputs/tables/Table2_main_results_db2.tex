@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{LOSO Cross-Validation Results — NinaPro DB2 (Intact)}
+\label{tab:main_results_db2}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+Method & Accuracy (\%) & Std (\%) & Median (\%) & Min (\%) & Max (\%) & Random Baseline \\
+\midrule
+\textbf{Raw (No Adaptation)} & 13.08 & 3.05 & 12.93 & 5.92 & 19.77 & 5.9\% \\
+\textbf{Feature Centering} & 13.08 & 3.05 & 12.93 & 5.92 & 19.77 & 5.9\% \\
+CORAL & 10.01 & 2.48 & 9.90 & 6.01 & 16.06 & 5.9\% \\
+TCA & 12.83 & 2.62 & 12.93 & 8.93 & 19.33 & 5.9\% \\
+Subspace Alignment & 12.02 & 2.09 & 11.92 & 8.24 & 16.96 & 5.9\% \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

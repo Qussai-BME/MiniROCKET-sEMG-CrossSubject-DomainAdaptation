@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db3_sa
+  Accuracy : 0.0597 ± 0.0090
+  Median   : 0.0609
+  Range    : [0.0414, 0.0716]
+  95% CI   : [0.0537, 0.0657]
+  Random   : 5.9%   Ratio: 1.0x
+  Folds    : 11/11 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db3_sa.json
+========================================================================

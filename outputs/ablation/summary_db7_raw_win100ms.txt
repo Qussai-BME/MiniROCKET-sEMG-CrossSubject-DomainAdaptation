@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db7_raw_win100ms
+  Accuracy : 0.0737 ± 0.0173
+  Median   : 0.0738
+  Range    : [0.0399, 0.1084]
+  95% CI   : [0.0660, 0.0814]
+  Random   : 2.5%   Ratio: 2.9x
+  Folds    : 22/22 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\ablation\results_db7_raw_win100ms.json
+========================================================================

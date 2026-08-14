@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db3_coral
+  Accuracy : 0.0656 ± 0.0108
+  Median   : 0.0640
+  Range    : [0.0489, 0.0895]
+  95% CI   : [0.0583, 0.0728]
+  Random   : 5.9%   Ratio: 1.1x
+  Folds    : 11/11 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db3_coral.json
+========================================================================

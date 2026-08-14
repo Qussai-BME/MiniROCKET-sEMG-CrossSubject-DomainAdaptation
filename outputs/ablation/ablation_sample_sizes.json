@@ -1,0 +1,43 @@
+{
+  "study": "sample_size_ablation",
+  "db": "db7",
+  "method": "raw",
+  "window_ms": 200,
+  "num_kernels": 10000,
+  "timestamp": "2026-07-13T02:19:50.382644",
+  "results": {
+    "n10k": {
+      "n_samples": 10000,
+      "mean": 0.0887,
+      "std": 0.022,
+      "median": 0.0959,
+      "ci95_lower": 0.0789,
+      "ci95_upper": 0.0984,
+      "random_pct": 2.51,
+      "ratio": 3.54,
+      "n_folds": 22
+    },
+    "n25k": {
+      "n_samples": 25000,
+      "mean": 0.085,
+      "std": 0.0203,
+      "median": 0.0909,
+      "ci95_lower": 0.076,
+      "ci95_upper": 0.094,
+      "random_pct": 2.51,
+      "ratio": 3.4,
+      "n_folds": 22
+    },
+    "n50k": {
+      "n_samples": 50000,
+      "mean": 0.0915,
+      "std": 0.0221,
+      "median": 0.095,
+      "ci95_lower": 0.0817,
+      "ci95_upper": 0.1012,
+      "random_pct": 2.51,
+      "ratio": 3.66,
+      "n_folds": 22
+    }
+  }
+}

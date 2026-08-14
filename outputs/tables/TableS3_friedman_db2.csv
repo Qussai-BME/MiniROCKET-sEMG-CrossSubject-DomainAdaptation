@@ -1,0 +1,2 @@
+database,n_subjects,n_methods,chi2_statistic,p_value,p_chi2,f_iman,p_iman,significant,rank_raw,rank_centering,rank_coral,rank_tca,rank_sa
+db2,40,5,55.654999999999994,9.303668946358812e-14,2.3685164940445702e-11,20.80161962719823,9.303668946358812e-14,True,2.25,2.25,4.425,2.6375,3.4375

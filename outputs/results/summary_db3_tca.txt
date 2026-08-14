@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db3_tca
+  Accuracy : 0.0630 ± 0.0091
+  Median   : 0.0640
+  Range    : [0.0505, 0.0792]
+  95% CI   : [0.0568, 0.0691]
+  Random   : 5.9%   Ratio: 1.1x
+  Folds    : 11/11 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db3_tca.json
+========================================================================

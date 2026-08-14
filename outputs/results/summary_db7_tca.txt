@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db7_tca
+  Accuracy : 0.0870 ± 0.0203
+  Median   : 0.0932
+  Range    : [0.0367, 0.1183]
+  95% CI   : [0.0780, 0.0960]
+  Random   : 2.5%   Ratio: 3.5x
+  Folds    : 22/22 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db7_tca.json
+========================================================================

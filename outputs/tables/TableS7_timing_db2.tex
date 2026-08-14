@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+\centering
+\caption{Timing Comparison (seconds)}
+\label{tab:timing}
+\begin{tabular}{lcccc}
+\toprule
+Method & Feature Extraction & Adaptation & Classification & Total \\
+\midrule
+Raw (No Adaptation) & 850.85 & 0.00 & 129.51 & 1283.53 \\
+Feature Centering & 888.08 & 6.00 & 136.58 & 1348.57 \\
+CORAL & 888.19 & 276.10 & 136.65 & 1632.30 \\
+TCA & 886.65 & 193.65 & 0.37 & 1255.36 \\
+Subspace Alignment & 885.98 & 124.22 & 0.40 & 1184.48 \\
+\bottomrule
+\end{tabular}
+\end{table}

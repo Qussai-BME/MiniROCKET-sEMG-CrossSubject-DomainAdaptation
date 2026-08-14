@@ -1,0 +1,11 @@
+
+========================================================================
+  RESULT: db2_coral
+  Accuracy : 0.1001 ± 0.0248
+  Median   : 0.0990
+  Range    : [0.0601, 0.1606]
+  95% CI   : [0.0921, 0.1080]
+  Random   : 5.9%   Ratio: 1.7x
+  Folds    : 40/40 OK
+  Saved    : C:\Users\MAIN IT\Desktop\p2 minirocket\outputs\results\results_db2_coral.json
+========================================================================

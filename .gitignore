@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs / temp
+*.tmp
+__cache__/
+
+# Testing / Coverage
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.local
+
+# NinaPro raw data -- not redistributed here, see README > Data Availability.
+# Point config.py's DB_PATHS at your own local download instead.
+*.mat
+data/raw/
+
+# Backup copies made automatically by the one-time patch scripts in
+# dev_history/ before they edited config.py / p07_generate_all_figures.py.
+# The patched files are already committed; these .bak snapshots add no
+# extra information beyond what git history itself now provides.
+*.bak
+
+# Local scratch files (not part of the pipeline)
+/test
+
+# Pre-publication manuscript drafts -- not published yet, kept local only.
+# Remove this rule once the paper is public if you want them in the repo.
+/Paper2_CoverLetter.docx
+/Paper2_MainManuscript.docx
+/Paper2_Supplementary_Material.docx
+
+# ── Pipeline-generated artifacts (regenerable from the scripts) ──
+
+# Resume checkpoints (user-specific, regenerable)
+outputs/checkpoints/
+
+# Intermediate NumPy feature archives (regenerable from p01a/p04a)
+outputs/features/
+
+# Pipeline run logs (ephemeral, machine-specific)
+outputs/logs/
+
+# Top-level run logs (ephemeral)
+logs/
