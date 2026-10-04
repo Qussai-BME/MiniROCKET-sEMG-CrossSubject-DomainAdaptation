@@ -1,0 +1,147 @@
+{
+  "database": "db7",
+  "feature_extractor": "canonical",
+  "seed": 42,
+  "num_kernels": 10000,
+  "n_subjects_requested": 22,
+  "method": "feature_reuse_v1",
+  "note": "Descriptive sensitivity sweep only . Features extracted once per subject and reused across all grid points \u2014 same coral_adaptation/tca_transform/sa_transform code as p01a, unmodified. The value used in the primary Table 2 experiment is fixed in config.py and was NOT selected from this sweep's results.",
+  "timestamp": "2026-09-26T01:15:58.317835",
+  "rows": [
+    {
+      "param": "coral_reg",
+      "value": 0.1,
+      "accuracy_mean": 0.2429,
+      "accuracy_std": 0.0714,
+      "balanced_accuracy_mean": 0.2387,
+      "macro_f1_mean": 0.2133,
+      "n_folds": 22
+    },
+    {
+      "param": "coral_reg",
+      "value": 0.01,
+      "accuracy_mean": 0.2338,
+      "accuracy_std": 0.0681,
+      "balanced_accuracy_mean": 0.2296,
+      "macro_f1_mean": 0.2058,
+      "n_folds": 22
+    },
+    {
+      "param": "coral_reg",
+      "value": 0.001,
+      "accuracy_mean": 0.2185,
+      "accuracy_std": 0.0624,
+      "balanced_accuracy_mean": 0.215,
+      "macro_f1_mean": 0.1926,
+      "n_folds": 22
+    },
+    {
+      "param": "coral_reg",
+      "value": 0.0001,
+      "accuracy_mean": 0.2111,
+      "accuracy_std": 0.0615,
+      "balanced_accuracy_mean": 0.2074,
+      "macro_f1_mean": 0.1843,
+      "n_folds": 22
+    },
+    {
+      "param": "coral_reg",
+      "value": 1e-05,
+      "accuracy_mean": 0.2035,
+      "accuracy_std": 0.0575,
+      "balanced_accuracy_mean": 0.1998,
+      "macro_f1_mean": 0.1762,
+      "n_folds": 22
+    },
+    {
+      "param": "tca_components",
+      "value": 10,
+      "accuracy_mean": 0.178,
+      "accuracy_std": 0.0506,
+      "balanced_accuracy_mean": 0.1713,
+      "macro_f1_mean": 0.1217,
+      "n_folds": 22
+    },
+    {
+      "param": "tca_components",
+      "value": 25,
+      "accuracy_mean": 0.1968,
+      "accuracy_std": 0.0585,
+      "balanced_accuracy_mean": 0.1898,
+      "macro_f1_mean": 0.1448,
+      "n_folds": 22
+    },
+    {
+      "param": "tca_components",
+      "value": 50,
+      "accuracy_mean": 0.207,
+      "accuracy_std": 0.0639,
+      "balanced_accuracy_mean": 0.2009,
+      "macro_f1_mean": 0.1608,
+      "n_folds": 22
+    },
+    {
+      "param": "tca_components",
+      "value": 100,
+      "accuracy_mean": 0.2099,
+      "accuracy_std": 0.067,
+      "balanced_accuracy_mean": 0.2041,
+      "macro_f1_mean": 0.1674,
+      "n_folds": 22
+    },
+    {
+      "param": "tca_components",
+      "value": 200,
+      "accuracy_mean": 0.2155,
+      "accuracy_std": 0.0681,
+      "balanced_accuracy_mean": 0.2104,
+      "macro_f1_mean": 0.176,
+      "n_folds": 22
+    },
+    {
+      "param": "sa_components",
+      "value": 10,
+      "accuracy_mean": 0.0854,
+      "accuracy_std": 0.0599,
+      "balanced_accuracy_mean": 0.0795,
+      "macro_f1_mean": 0.0531,
+      "n_folds": 22
+    },
+    {
+      "param": "sa_components",
+      "value": 25,
+      "accuracy_mean": 0.0782,
+      "accuracy_std": 0.0509,
+      "balanced_accuracy_mean": 0.0745,
+      "macro_f1_mean": 0.0526,
+      "n_folds": 22
+    },
+    {
+      "param": "sa_components",
+      "value": 50,
+      "accuracy_mean": 0.0809,
+      "accuracy_std": 0.0517,
+      "balanced_accuracy_mean": 0.0787,
+      "macro_f1_mean": 0.0618,
+      "n_folds": 22
+    },
+    {
+      "param": "sa_components",
+      "value": 100,
+      "accuracy_mean": 0.0485,
+      "accuracy_std": 0.0149,
+      "balanced_accuracy_mean": 0.0466,
+      "macro_f1_mean": 0.0312,
+      "n_folds": 22
+    },
+    {
+      "param": "sa_components",
+      "value": 200,
+      "accuracy_mean": 0.0648,
+      "accuracy_std": 0.033,
+      "balanced_accuracy_mean": 0.0634,
+      "macro_f1_mean": 0.0509,
+      "n_folds": 22
+    }
+  ]
+}

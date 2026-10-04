@@ -7,7 +7,7 @@ p04a_extract_kernel_importance_data.py — استخراج بيانات أهمي�
   N_FOLDS:     5      -> 3
 
 هذا كافٍ تماماً لغرض التحليل (اتجاه عام لأهمية النوى، ليس دقة قصوى).
-كل fold يطبع تقدمه فوراً (flush=True) ليظهر في run_pipeline_from_stage03.py
+كل fold يطبع تقدمه فوراً (flush=True) ليظهر فوراً في الطرفية
 بشكل حي وليس بعد الانتهاء الكامل.
 """
 import sys, os, gc, time, argparse

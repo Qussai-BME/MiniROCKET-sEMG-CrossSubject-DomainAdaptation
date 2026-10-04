@@ -1,0 +1,28 @@
+database,metric,method,p_holm_sidak_3contrasts
+NinaPro DB7,Accuracy,CORAL,0.0412815
+NinaPro DB7,Accuracy,TCA,0.632729
+NinaPro DB7,Accuracy,SA,1.43051e-06
+NinaPro DB7,Balanced acc.,CORAL,0.0228138
+NinaPro DB7,Balanced acc.,TCA,0.336947
+NinaPro DB7,Balanced acc.,SA,1.43051e-06
+NinaPro DB7,Macro-F1,CORAL,0.00118507
+NinaPro DB7,Macro-F1,TCA,0.0172009
+NinaPro DB7,Macro-F1,SA,2.86102e-06
+NinaPro DB3,Accuracy,CORAL,0.519531
+NinaPro DB3,Accuracy,TCA,0.479178
+NinaPro DB3,Accuracy,SA,0.0404574
+NinaPro DB3,Balanced acc.,CORAL,0.713608
+NinaPro DB3,Balanced acc.,TCA,0.713608
+NinaPro DB3,Balanced acc.,SA,0.0203679
+NinaPro DB3,Macro-F1,CORAL,0.0404574
+NinaPro DB3,Macro-F1,TCA,0.0404574
+NinaPro DB3,Macro-F1,SA,0.0537109
+NinaPro DB2,Accuracy,CORAL,0.0111229
+NinaPro DB2,Accuracy,TCA,0.142349
+NinaPro DB2,Accuracy,SA,5.45697e-12
+NinaPro DB2,Balanced acc.,CORAL,0.0568676
+NinaPro DB2,Balanced acc.,TCA,0.0568676
+NinaPro DB2,Balanced acc.,SA,5.45697e-12
+NinaPro DB2,Macro-F1,CORAL,1.84536e-07
+NinaPro DB2,Macro-F1,TCA,8.83105e-05
+NinaPro DB2,Macro-F1,SA,5.45697e-12

@@ -265,6 +265,8 @@ def _extract_trials(emg, stim, rep, min_len=100):
 
 def validate_data_path(db_key, cfg):
     path = cfg.DB_PATHS.get(db_key)
+    if os.environ.get('ALLOW_CACHE_ONLY', '0') == '1':
+        return True, f"OK: cache-only execution enabled for {db_key}"
     if path is None:
         return False, f"Database key '{db_key}' not found in DB_PATHS"
     if not os.path.exists(path):
@@ -325,7 +327,7 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
     n_classes_global = len(movement_ids)
 
     for sid in sorted(subject_files.keys()):
-        all_windows, all_labels = [], []
+        all_windows, all_labels, all_reps = [], [], []
 
         for fpath in subject_files[sid]:
             mat, ltype = _load_mat_robust(fpath)
@@ -343,14 +345,28 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
                 pad = np.zeros((emg.shape[0], n_ch - emg.shape[1]), dtype=np.float32)
                 emg = np.hstack([emg, pad])
 
-            # محاولة استخراج متغير التكرار
+            # استخراج متجه التكرار المطابق لطول stimulus. بعض ملفات DB2 E3
+            # تحتوي فرقاً بمقدار عينة بين restimulus/rerepetition وstimulus/
+            # repetition؛ لا يجوز اختيار rerepetition لمجرد أن اسمه يحوي rep.
             rep = None
+            rep_candidates = []
             for key in mat.keys():
-                if 'rep' in key.lower():
-                    rep = (np.array(mat[key]).ravel()
+                kl = key.lower()
+                if 'rep' in kl:
+                    arr = (np.array(mat[key]).ravel()
                            if ltype == 'h5py'
-                           else np.array(mat[key]).squeeze())
-                    break
+                           else np.array(mat[key]).squeeze()).ravel()
+                    rep_candidates.append((kl, arr))
+            exact = [arr for kl, arr in rep_candidates if len(arr) == len(stim)]
+            if exact:
+                preferred = [arr for kl, arr in rep_candidates
+                             if kl in ('repetition', 'rep') and len(arr) == len(stim)]
+                rep = (preferred[0] if preferred else exact[0])
+            elif rep_candidates:
+                # Defensive fallback for malformed recordings: trim to the
+                # common length rather than indexing beyond the vector.
+                rep = min(rep_candidates, key=lambda x: abs(len(x[1]) - len(stim)))[1]
+                rep = rep[:len(stim)]
 
             trials = _extract_trials(emg, stim, rep, min_trial_len)
 
@@ -364,12 +380,20 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
                     np.full(tr["emg"].shape[0], tr["stimulus"], dtype=np.int32),
                     overlap, win_samples
                 )
+                # FIX-DATALOADER-01 (يدعم items 4 و5): كل نافذة من هذا
+                # الـ trial تنتمي لنفس رقم التكرار tr["repetition"] —
+                # الـ trial بأكمله مقطع متصل من إشارة واحدة بنفس
+                # (stimulus, repetition)، فالنوافذ المتداخلة (50%) داخله
+                # لا يمكن أن تنتمي لتكرارين مختلفين أصلاً؛ هنا فقط نُسجّل
+                # رقم التكرار لتمكين التقسيم على مستوى التكرار لاحقاً.
+                win_reps = np.full(wins.shape[0], int(tr["repetition"]),
+                                   dtype=np.int32)
 
                 # تطبيق فلتر التمرين الاختياري (للـ ablation)
                 if exercise_filter is not None:
                     mask = _apply_exercise_filter(win_lbls, exercise_filter)
                     if mask.sum() > 0:
-                        wins, win_lbls = wins[mask], win_lbls[mask]
+                        wins, win_lbls, win_reps = wins[mask], win_lbls[mask], win_reps[mask]
                     else:
                         continue
 
@@ -380,12 +404,13 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
                                          dtype=np.int32)
                     valid_grp = new_lbls >= 0
                     if valid_grp.sum() > 0:
-                        wins, win_lbls = wins[valid_grp], new_lbls[valid_grp]
+                        wins, win_lbls, win_reps = wins[valid_grp], new_lbls[valid_grp], win_reps[valid_grp]
                     else:
                         continue
 
                 all_windows.append(wins)
                 all_labels.append(win_lbls)
+                all_reps.append(win_reps)
 
             del emg, stim, mat
             gc.collect()
@@ -395,15 +420,16 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
 
         X = np.concatenate(all_windows, axis=0).astype(np.float32)
         y = np.concatenate(all_labels).astype(np.int32)
+        rep_ids = np.concatenate(all_reps).astype(np.int32)
 
         # استبعاد الراحة (rest = 0)
         if meta.get("exclude_rest", True):
             rest_mask = y > 0
             if rest_mask.sum() == 0:
-                del X, y, all_windows, all_labels
+                del X, y, rep_ids, all_windows, all_labels, all_reps
                 gc.collect()
                 continue
-            X, y = X[rest_mask], y[rest_mask]
+            X, y, rep_ids = X[rest_mask], y[rest_mask], rep_ids[rest_mask]
 
         if len(y) == 0:
             continue
@@ -419,10 +445,10 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
                 "هذا يشير إلى أن ملفات Exercise غير E1 وصلت بشكل غير متوقع."
             )
         if valid_mask.sum() == 0:
-            del X, y, all_windows, all_labels
+            del X, y, rep_ids, all_windows, all_labels, all_reps
             gc.collect()
             continue
-        X, y = X[valid_mask], y[valid_mask]
+        X, y, rep_ids = X[valid_mask], y[valid_mask], rep_ids[valid_mask]
 
         # الـ global label map: {1:0, 2:1, ..., 41:40} أو {1:0,...,17:16}
         # إذا كان group_classes مفعّلاً، الـ y بالفعل أُعيد تعيينه أعلاه
@@ -440,12 +466,13 @@ def load_ninapro_stream(db_key, cfg, window_ms, overlap,
             "subject_id":   sid,
             "X":            X,
             "y":            y_remapped,
+            "rep_id":       rep_ids,     # FIX-DATALOADER-01 (items 4, 5)
             "n_classes":    n_cls,
             "label_map":    final_lmap,
             "sampling_rate": fs,
         }
 
-        del X, y, all_windows, all_labels
+        del X, y, rep_ids, all_windows, all_labels, all_reps
         gc.collect()
 
 
@@ -479,6 +506,7 @@ def load_ninapro_db(db_key, cfg, window_ms=200, overlap=0.5,
         data[sid] = {
             "X":          subj["X"],
             "y":          subj["y"],
+            "rep_id":     subj["rep_id"],   # FIX-DATALOADER-01
             "subject_id": sid,
             "label_map":  subj["label_map"],
             "n_classes":  subj["n_classes"],

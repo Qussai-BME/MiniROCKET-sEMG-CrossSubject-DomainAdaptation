@@ -419,47 +419,30 @@ def wilcoxon_pairwise(accuracy_matrix, method_names=None):
 # ====================================================================
 def holm_sidak_correction(p_values, alpha=0.05):
     """
-    تصحيح هولم-سيداك للمقارنات المتعددة (Step-down procedure).
+    Holm-Sidak step-down correction for multiple comparisons.
 
-    هذا التصحيح أقوى من تصحيح بونفيروني (Bonferroni) ويحافظ على
-    مستوى الدلالة الإجمالي.
+    For m raw p-values sorted ascending, the i-th smallest (i = 0..m-1) is adjusted to
+    1 - (1 - p_i) ** (m - i), and monotonicity is enforced by a running maximum.
 
-    المعاملات:
-        p_values (list): قائمة بقيم p الخام.
-        alpha (float): مستوى الدلالة (الافتراضي 0.05).
+    Parameters
+        p_values (list): raw p-values.
+        alpha (float): significance level (default 0.05).
 
-    المخرجات:
-        list: قائمة من القواميس، كل قاموس يحتوي على:
-            - 'raw_p': قيمة p الخام
-            - 'adjusted_p': قيمة p المصححة
-            - 'significant': True إذا كانت p المصححة < alpha
-            - 'rejected': True إذا تم رفض الفرضية الصفرية (نفس significant)
+    Returns
+        list of dicts with keys 'raw_p', 'adjusted_p', 'significant', 'rejected'.
     """
     pv = np.asarray(p_values, dtype=np.float64)
     n = len(pv)
-
     if n == 0:
         return []
 
-    # ترتيب القيم تصاعدياً
     order = np.argsort(pv)
-    sorted_p = pv[order]
-
-    # تطبيق تصحيح هولم-سيداك
-    # i = 0..n-1
-    # adjusted_p = 1 - (1 - p_i)^(1/(n-i))
-    # لكننا نطبق النسخة الخطوة التنازلية (Holm's method) وهي الأكثر شيوعاً
-    # Holm's method: adjusted_p = min(1, p_i * (n - i))
-    # في هذه الدالة نستخدم Holm's method (الأبسط والأكثر تحفظاً قليلاً من Sidak)
-
     adj = np.empty(n)
+    running = 0.0
     for i, idx in enumerate(order):
-        # Holm's step-down
-        adjusted = min(1.0, pv[idx] * (n - i))
-        # التأكد من الرتابة (monotonicity)
-        if i > 0 and adjusted < adj[order[i - 1]]:
-            adjusted = adj[order[i - 1]]
-        adj[idx] = adjusted
+        a = 1.0 - (1.0 - pv[idx]) ** (n - i)
+        running = max(running, a)
+        adj[idx] = min(1.0, running)
 
     return [
         {

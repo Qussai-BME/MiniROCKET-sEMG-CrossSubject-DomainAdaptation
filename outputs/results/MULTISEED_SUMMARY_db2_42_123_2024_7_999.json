@@ -1,0 +1,212 @@
+{
+  "database": "db2",
+  "seeds": [
+    42,
+    123,
+    2024,
+    7,
+    999
+  ],
+  "methods": {
+    "raw": {
+      "seeds": [
+        {
+          "seed": 42,
+          "accuracy": 0.1134125,
+          "balanced_accuracy": 0.11674859999999998,
+          "macro_f1": 0.09126157500000001
+        },
+        {
+          "seed": 123,
+          "accuracy": 0.11739069999999999,
+          "balanced_accuracy": 0.12081392499999999,
+          "macro_f1": 0.09490085000000001
+        },
+        {
+          "seed": 2024,
+          "accuracy": 0.11580499999999998,
+          "balanced_accuracy": 0.12071555,
+          "macro_f1": 0.09441522500000002
+        },
+        {
+          "seed": 7,
+          "accuracy": 0.11326097499999999,
+          "balanced_accuracy": 0.11717195,
+          "macro_f1": 0.09012962499999999
+        },
+        {
+          "seed": 999,
+          "accuracy": 0.11607775000000001,
+          "balanced_accuracy": 0.12060420000000001,
+          "macro_f1": 0.09325885
+        }
+      ],
+      "accuracy_mean": 0.115189385,
+      "accuracy_sd": 0.0017951356050449213,
+      "balanced_accuracy_mean": 0.11921084499999998,
+      "balanced_accuracy_sd": 0.002061260781688001,
+      "macro_f1_mean": 0.09279322500000001,
+      "macro_f1_sd": 0.00204514611114647
+    },
+    "centering": {
+      "seeds": [
+        {
+          "seed": 42,
+          "accuracy": 0.11359340000000002,
+          "balanced_accuracy": 0.11700572500000002,
+          "macro_f1": 0.09133795
+        },
+        {
+          "seed": 123,
+          "accuracy": 0.11739069999999999,
+          "balanced_accuracy": 0.12081392499999999,
+          "macro_f1": 0.09490085000000001
+        },
+        {
+          "seed": 2024,
+          "accuracy": 0.11580499999999998,
+          "balanced_accuracy": 0.12071555,
+          "macro_f1": 0.09441522500000002
+        },
+        {
+          "seed": 7,
+          "accuracy": 0.11326097499999999,
+          "balanced_accuracy": 0.11717195,
+          "macro_f1": 0.09012962499999999
+        },
+        {
+          "seed": 999,
+          "accuracy": 0.11607775000000001,
+          "balanced_accuracy": 0.12060420000000001,
+          "macro_f1": 0.09325885
+        }
+      ],
+      "accuracy_mean": 0.11522556499999999,
+      "accuracy_sd": 0.001751667078599691,
+      "balanced_accuracy_mean": 0.11926227,
+      "balanced_accuracy_sd": 0.0019863197855424695,
+      "macro_f1_mean": 0.0928085,
+      "macro_f1_sd": 0.0020310832970825044
+    },
+    "coral": {
+      "seeds": [
+        {
+          "seed": 42,
+          "accuracy": 0.122184025,
+          "balanced_accuracy": 0.12375857500000001,
+          "macro_f1": 0.10740707499999999
+        },
+        {
+          "seed": 123,
+          "accuracy": 0.130187325,
+          "balanced_accuracy": 0.13241505,
+          "macro_f1": 0.11549899999999999
+        },
+        {
+          "seed": 2024,
+          "accuracy": 0.12192734999999999,
+          "balanced_accuracy": 0.125005875,
+          "macro_f1": 0.10908872499999997
+        },
+        {
+          "seed": 7,
+          "accuracy": 0.126540125,
+          "balanced_accuracy": 0.12921895,
+          "macro_f1": 0.1112719
+        },
+        {
+          "seed": 999,
+          "accuracy": 0.12450614999999998,
+          "balanced_accuracy": 0.12889535000000002,
+          "macro_f1": 0.11060650000000001
+        }
+      ],
+      "accuracy_mean": 0.125068995,
+      "accuracy_sd": 0.0034231310655140714,
+      "balanced_accuracy_mean": 0.12785876000000002,
+      "balanced_accuracy_sd": 0.0034869357638817383,
+      "macro_f1_mean": 0.11077464,
+      "macro_f1_sd": 0.0030322400710221676
+    },
+    "tca": {
+      "seeds": [
+        {
+          "seed": 42,
+          "accuracy": 0.11193835,
+          "balanced_accuracy": 0.11331277499999999,
+          "macro_f1": 0.08138425
+        },
+        {
+          "seed": 123,
+          "accuracy": 0.11413185,
+          "balanced_accuracy": 0.11528905,
+          "macro_f1": 0.084889625
+        },
+        {
+          "seed": 2024,
+          "accuracy": 0.111096225,
+          "balanced_accuracy": 0.11401032500000001,
+          "macro_f1": 0.08348705000000001
+        },
+        {
+          "seed": 7,
+          "accuracy": 0.111970825,
+          "balanced_accuracy": 0.11384497499999999,
+          "macro_f1": 0.080114175
+        },
+        {
+          "seed": 999,
+          "accuracy": 0.11080755,
+          "balanced_accuracy": 0.11397850000000001,
+          "macro_f1": 0.082325675
+        }
+      ],
+      "accuracy_mean": 0.11198896,
+      "accuracy_sd": 0.0013026485683742572,
+      "balanced_accuracy_mean": 0.114087125,
+      "balanced_accuracy_sd": 0.0007281098614306132,
+      "macro_f1_mean": 0.082440155,
+      "macro_f1_sd": 0.0018462202212730478
+    },
+    "sa": {
+      "seeds": [
+        {
+          "seed": 42,
+          "accuracy": 0.026694174999999997,
+          "balanced_accuracy": 0.027667675000000003,
+          "macro_f1": 0.015016725
+        },
+        {
+          "seed": 123,
+          "accuracy": 0.031349075,
+          "balanced_accuracy": 0.031951875,
+          "macro_f1": 0.018696825
+        },
+        {
+          "seed": 2024,
+          "accuracy": 0.0284846,
+          "balanced_accuracy": 0.029053525000000004,
+          "macro_f1": 0.014694125000000002
+        },
+        {
+          "seed": 7,
+          "accuracy": 0.027577499999999998,
+          "balanced_accuracy": 0.0287575,
+          "macro_f1": 0.015019149999999998
+        },
+        {
+          "seed": 999,
+          "accuracy": 0.0291194,
+          "balanced_accuracy": 0.030331050000000005,
+          "macro_f1": 0.016874450000000003
+        }
+      ],
+      "accuracy_mean": 0.028644949999999995,
+      "accuracy_sd": 0.0017683381706951587,
+      "balanced_accuracy_mean": 0.029552325,
+      "balanced_accuracy_sd": 0.001642917121407071,
+      "macro_f1_mean": 0.016060255000000002,
+      "macro_f1_sd": 0.0017068670511898403
+    }
+  }
+}

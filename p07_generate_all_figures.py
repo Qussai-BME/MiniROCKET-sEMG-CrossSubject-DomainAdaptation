@@ -91,7 +91,7 @@ def safe_class_labels(db_key, n_classes, max_show):
         return numeric_fallback
 
     non_rest_names = names[1:]  # drop "rest"
-    if len(non_rest_names) != n_classes:
+    if len(non_rest_names) != n_classes or len(non_rest_names) < max_show:
         print(f"  [WARNING] Movement-name list for '{db_key}' has "
               f"{len(non_rest_names)} entries but this run has n_classes="
               f"{n_classes}. REFUSING to apply names (would risk "
@@ -512,7 +512,20 @@ def plot_confusion_matrices(all_data, fig_dir):
             continue
 
         res = db_data[best_method]
+        # FIX-P07-COMPAT: نفس فجوة مخطط p06 — النتائج الجديدة (V3) لا
+        # تضع n_classes على المستوى الأعلى، فكان هذا يُرجع 0 دائماً
+        # ويتخطى رسم مصفوفة الارتباك بصمت لكل قاعدة بيانات جديدة.
         n_classes = res.get('n_classes', 0)
+        if not n_classes:
+            for s in res.get('per_subject', []):
+                fpc = s.get('f1_per_class')
+                if fpc:
+                    n_classes = len(fpc)
+                    break
+                cm0 = s.get('confusion_matrix')
+                if cm0:
+                    n_classes = len(cm0)
+                    break
 
         if n_classes == 0:
             continue

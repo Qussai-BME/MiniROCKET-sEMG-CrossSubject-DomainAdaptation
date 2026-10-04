@@ -1,6 +1,0 @@
-database,method,method_label,n_subjects,n_classes,accuracy_mean,accuracy_std,accuracy_median,accuracy_min,accuracy_max,ci95_lower,ci95_upper,avg_random_baseline,avg_ratio_vs_random
-db2,raw,Raw (No Adaptation),40,17,0.1308,0.0305,0.1293,0.0592,0.1977,0.1211,0.1406,5.88,2.22
-db2,centering,Feature Centering,40,17,0.1308,0.0305,0.1293,0.0592,0.1977,0.1211,0.1406,5.88,2.22
-db2,coral,CORAL,40,17,0.1001,0.0248,0.099,0.0601,0.1606,0.0921,0.108,5.88,1.7
-db2,tca,TCA,40,17,0.1283,0.0262,0.1293,0.0893,0.1933,0.1199,0.1366,5.88,2.18
-db2,sa,Subspace Alignment,40,17,0.1202,0.0209,0.1192,0.0824,0.1696,0.1135,0.1269,5.88,2.04

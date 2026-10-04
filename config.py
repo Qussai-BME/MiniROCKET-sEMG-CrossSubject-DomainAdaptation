@@ -33,9 +33,9 @@ LOG_DIR     = os.path.join(OUTPUT_DIR, "logs")
 CHECKPOINT_DIR = os.path.join(OUTPUT_DIR, "checkpoints")
 
 DB_PATHS = {
-    "db7": os.environ.get("NINAPRO_DB7", r""),
-    "db3": os.environ.get("NINAPRO_DB3", r""),
-    "db2": os.environ.get("NINAPRO_DB2", r""),
+    "db7": os.environ.get("NINAPRO_DB7", r"E:\NinaProDB7"),
+    "db3": os.environ.get("NINAPRO_DB3", r"E:\NinaProDB3"),
+    "db2": os.environ.get("NINAPRO_DB2", r"E:\NinaProDB2"),
 }
 
 # =============================================================================
@@ -87,19 +87,19 @@ DB_META = {
     },
     # -------------------------------------------------------------------------
     # DB2 — Atzori et al. 2014 (intact)
-    # 40 subjects, Delsys Trigno 2kHz, Exercise B only (17 movements)
+    # DB2: 40 subjects, Delsys Trigno 2kHz, all three exercises (49 movements)
     # -------------------------------------------------------------------------
     "db2": {
         "n_subjects":    40,
-        "n_movements":   17,
+        "n_movements":   49,
         "n_channels":    12,
         "sampling_rate": 2000,          # ← FIXED (كان 100, خطأ)
         "subject_ids":   list(range(1, 41)),
-        "movement_ids":  list(range(1, 18)),   # 1..17 → map إلى 0..16
+        "movement_ids":  list(range(1, 50)),   # E1: 1..17, E2: 18..40, E3: 41..49
         "exclude_rest":  True,
         "display_name":  "NinaPro DB2 (Intact)",
-        "exercise_ranges": {"E1": (1, 17)},
-        "exercise_e1_only": True,       # ← مهم: نحمّل Exercise B فقط
+        "exercise_ranges": {"E1": (1, 17), "E2": (18, 40), "E3": (41, 49), "all": (1, 49)},
+        "exercise_e1_only": False,      # full subject: retain E1, E2, and E3
         "grouped_classes": None,
     },
 }
@@ -149,6 +149,70 @@ METHOD_COLORS = {
 # =============================================================================
 RANDOM_SEED  = 42
 STATS_ALPHA  = 0.05
+
+# =============================================================================
+# ADDITIONS (post-review revision) — see CHANGELOG.md
+# =============================================================================
+
+# --- Feature extractor -----------------------------------------------
+# "canonical" = sktime/aeon MiniRocketMultivariate (PRIMARY)
+# "custom_ppv" = this repo's original hand-written MiniRocket (RETAINED as a
+#                clearly labeled comparator (no reported result uses it).
+#                instruction — never silently dropped).
+FEATURE_EXTRACTOR = "canonical"
+FEATURE_EXTRACTOR_OPTIONS = ("canonical", "custom_ppv")
+# p01a's --all-extractors flag runs both and tags results
+# "<tag>__canonical" / "<tag>__custom_ppv" so neither is lost.
+
+# --- Item 3: evaluation-paradigm labels (terminology fix) -------------------
+# raw/centering use ZERO target information (inductive LOSO).
+# coral/tca/sa use unlabeled target CALIBRATION windows to fit the adaptation
+# transform (transductive UDA) — they must never be called "zero-shot" or
+# "no target data" in text or logs.
+INDUCTIVE_METHODS    = ("raw", "centering")
+TRANSDUCTIVE_METHODS = ("coral", "tca", "sa")
+EVALUATION_PARADIGM = {
+    "raw":       "inductive_loso",
+    "centering": "inductive_loso",
+    "coral":     "transductive_uda",
+    "tca":       "transductive_uda",
+    "sa":        "transductive_uda",
+}
+
+# --- Item 4: calibration / final-test split for the transductive setting ----
+# Fraction of the held-out (target) subject's REPETITIONS (not windows) used
+# as unlabeled calibration data to fit coral/tca/sa. The remaining
+# repetitions are the final-test set, never touched during adaptation
+# fitting, for ANY method (raw/centering evaluate on the same final-test
+# partition so all 5 methods remain comparable on identical test data).
+CALIBRATION_FRACTION = 0.5
+MIN_CALIBRATION_REPS_PER_CLASS = 1
+MIN_FINAL_TEST_REPS_PER_CLASS  = 1
+
+# --- Item 5: within-subject baseline split unit ------------------------------
+# Splitting must happen on whole repetitions BEFORE windowing, never on
+# individual (50%-overlapping) windows, which would leak raw samples across
+# the train/test boundary.
+WITHIN_SUBJECT_TEST_FRACTION = 0.2
+WITHIN_SUBJECT_SPLIT_UNIT = "repetition"   # was, implicitly, "window"
+
+# --- Item 6: methods included in INFERENTIAL statistics ---------------------
+# "centering" is a numerically exact null replicate of "raw" in this
+# pipeline (StandardScaler already mean-centers) and must not be treated as
+# an independent condition in the Friedman/Wilcoxon/Nemenyi machinery.
+# It is still computed and reported descriptively in Table 2.
+INFERENTIAL_METHODS = ("raw", "coral", "tca", "sa")   # centering excluded
+
+# --- Item 8: seeds for the main experiment -----------------------------------
+SEED_LIST = [42, 123, 2024, 7, 999]
+
+# --- Item 9: LOSO-fold terminology (73 subjects, 365 method-fold evals) -----
+N_HELD_OUT_SUBJECT_FOLDS = 73          # 22 (DB7) + 40 (DB2) + 11 (DB3)
+N_METHOD_FOLD_EVALUATIONS = 365        # 73 subjects x 5 methods
+
+# --- Item 10: sensitivity grids (selected WITHOUT looking at target labels) -
+CORAL_REG_GRID = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+TCA_SA_COMPONENTS_GRID = [10, 25, 50, 100, 200]
 
 # =============================================================================
 # VISUALIZATION
@@ -223,7 +287,8 @@ DB7_MOVEMENT_NAMES = [
     "Cut something (index finger extension grasp)",
 ]
 
-# DB2 / DB3 Exercise B — 17 movements
+# DB2 full protocol — 49 movements; E2/E3 use stable protocol IDs when
+# the hand-specific names are not available in the released data.
 DB2_MOVEMENT_NAMES = [
     "rest",
     "Thumb up",
@@ -243,7 +308,8 @@ DB2_MOVEMENT_NAMES = [
     "Wrist radial deviation",
     "Wrist ulnar deviation",
     "Wrist extension with closed hand",
-]
+] + [f"E2 movement {i}" for i in range(18, 41)] \
+  + [f"E3 movement {i}" for i in range(41, 50)]
 
 DB7_GROUP_NAMES = [
     "Basic hand", "Isometric config.", "Finger individ.",
@@ -252,8 +318,8 @@ DB7_GROUP_NAMES = [
 DB3_GROUP_NAMES = ["Grasp", "Wrist", "Rotation", "Precision", "Pinch", "Thumb"]
 
 # --- Safety checks added by dev_history/apply_config_fix_already_applied.py ---
-assert len(DB2_MOVEMENT_NAMES) == 18, \
-    f"DB2_MOVEMENT_NAMES has {len(DB2_MOVEMENT_NAMES)} entries, expected 18 (rest + 17)"
+assert len(DB2_MOVEMENT_NAMES) == 50, \
+    f"DB2_MOVEMENT_NAMES has {len(DB2_MOVEMENT_NAMES)} entries, expected 50 (rest + 49)"
 assert len(DB7_MOVEMENT_NAMES) == 41, \
     f"DB7_MOVEMENT_NAMES has {len(DB7_MOVEMENT_NAMES)} entries, expected 41 (rest + 40)"
 assert DB_META["db7"]["n_movements"] == 40, \

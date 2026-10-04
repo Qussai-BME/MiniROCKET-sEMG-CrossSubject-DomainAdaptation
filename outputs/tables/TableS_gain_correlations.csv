@@ -1,0 +1,10 @@
+database,predictor,spearman_rho,p_value
+NinaPro DB7,initial covariance distance,-0.0231508,0.918549
+NinaPro DB7,calibration windows,-0.0220215,0.92251
+NinaPro DB7,Raw accuracy,-0.466968,0.0284495
+NinaPro DB3,initial covariance distance,-0.00909091,0.978837
+NinaPro DB3,calibration windows,-0.336364,0.311824
+NinaPro DB3,Raw accuracy,-0.227273,0.501536
+NinaPro DB2,initial covariance distance,0.465666,0.0024612
+NinaPro DB2,calibration windows,0.0457786,0.779097
+NinaPro DB2,Raw accuracy,-0.632833,1.17812e-05

@@ -1,0 +1,116 @@
+{
+  "databases": [
+    "db3"
+  ],
+  "seeds": [
+    42,
+    123,
+    2024,
+    7,
+    999
+  ],
+  "extractor": "canonical",
+  "timestamp": "2026-09-26T23:34:14.253932",
+  "results": {
+    "db3_raw": {
+      "seeds": [
+        42,
+        123,
+        2024,
+        7,
+        999
+      ],
+      "accuracy_per_seed": [
+        0.08873072727272727,
+        0.09048954545454546,
+        0.08770945454545455,
+        0.09321672727272726,
+        0.08371709090909091
+      ],
+      "accuracy_mean_across_seeds": 0.0888,
+      "accuracy_std_across_seeds": 0.0031,
+      "balanced_accuracy_mean_across_seeds": 0.0922,
+      "macro_f1_mean_across_seeds": 0.0613
+    },
+    "db3_centering": {
+      "seeds": [
+        42,
+        123,
+        2024,
+        7,
+        999
+      ],
+      "accuracy_per_seed": [
+        0.08873072727272727,
+        0.09048954545454546,
+        0.08770945454545455,
+        0.09321672727272726,
+        0.08371709090909091
+      ],
+      "accuracy_mean_across_seeds": 0.0888,
+      "accuracy_std_across_seeds": 0.0031,
+      "balanced_accuracy_mean_across_seeds": 0.0922,
+      "macro_f1_mean_across_seeds": 0.0613
+    },
+    "db3_coral": {
+      "seeds": [
+        42,
+        123,
+        2024,
+        7,
+        999
+      ],
+      "accuracy_per_seed": [
+        0.08899618181818182,
+        0.0870290909090909,
+        0.07704018181818183,
+        0.08063618181818182,
+        0.0847619090909091
+      ],
+      "accuracy_mean_across_seeds": 0.0837,
+      "accuracy_std_across_seeds": 0.0043,
+      "balanced_accuracy_mean_across_seeds": 0.0863,
+      "macro_f1_mean_across_seeds": 0.0814
+    },
+    "db3_tca": {
+      "seeds": [
+        42,
+        123,
+        2024,
+        7,
+        999
+      ],
+      "accuracy_per_seed": [
+        0.09500954545454544,
+        0.09873181818181818,
+        0.09603954545454546,
+        0.0966472727272727,
+        0.097461
+      ],
+      "accuracy_mean_across_seeds": 0.0968,
+      "accuracy_std_across_seeds": 0.0013,
+      "balanced_accuracy_mean_across_seeds": 0.099,
+      "macro_f1_mean_across_seeds": 0.0781
+    },
+    "db3_sa": {
+      "seeds": [
+        42,
+        123,
+        2024,
+        7,
+        999
+      ],
+      "accuracy_per_seed": [
+        0.06254072727272728,
+        0.060410363636363644,
+        0.05984845454545454,
+        0.057066,
+        0.06678145454545455
+      ],
+      "accuracy_mean_across_seeds": 0.0613,
+      "accuracy_std_across_seeds": 0.0032,
+      "balanced_accuracy_mean_across_seeds": 0.0625,
+      "macro_f1_mean_across_seeds": 0.0386
+    }
+  }
+}

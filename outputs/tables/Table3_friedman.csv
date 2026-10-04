@@ -1,0 +1,10 @@
+database,metric,N,chi2_F,iman_davenport_p,rank_raw,rank_coral,rank_tca,rank_sa
+NinaPro DB7,Accuracy,22,45.7091,3.92876e-16,2.18182,1.45455,2.36364,4
+NinaPro DB7,Balanced acc.,22,48.4909,3.88461e-18,2.13636,1.36364,2.5,4
+NinaPro DB7,Macro-F1,22,50.8909,3.82489e-20,2.18182,1.22727,2.63636,3.95455
+NinaPro DB3,Accuracy,11,10.7455,0.00736032,2.18182,2.63636,1.72727,3.45455
+NinaPro DB3,Balanced acc.,11,12.0545,0.00311196,2,2.63636,1.81818,3.54545
+NinaPro DB3,Macro-F1,11,17.9455,2.61295e-05,2.72727,1.54545,2,3.72727
+NinaPro DB2,Accuracy,40,85.23,2.47947e-31,2,1.475,2.525,4
+NinaPro DB2,Balanced acc.,40,84.81,4.99304e-31,1.925,1.525,2.55,4
+NinaPro DB2,Macro-F1,40,103.08,1.36683e-49,2.1,1.15,2.75,4

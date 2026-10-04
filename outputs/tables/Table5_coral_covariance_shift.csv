@@ -1,0 +1,4 @@
+database,fold_seed_evaluations,cov_dist_before,cov_dist_after,mean_reduction_pct,median_reduction_pct,min_reduction_pct_over_evaluations,evaluations_with_reduction,mmd_before,mmd_after
+NinaPro DB7,110,5.60747,0.980722,81.4911,85.4355,14.4678,110,30.6034,0.337914
+NinaPro DB3,55,15.9573,1.29231,89.6013,92.906,43.4467,55,112.67,0.742609
+NinaPro DB2,200,5.84736,0.951666,82.078,82.6575,46.6154,200,37.5617,0.299234

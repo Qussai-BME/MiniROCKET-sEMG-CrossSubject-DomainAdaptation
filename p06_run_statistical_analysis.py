@@ -112,6 +112,51 @@ def load_results_from_dir(results_dir):
 
     return all_data
 
+def _derive_missing_summary_fields(res):
+    """
+    FIX-P06-COMPAT (اكتُشف أثناء إعادة تشغيل p06 على نتائج DB3/DB7
+    الحقيقية بعد التدقيق): هذا الملف كُتب أصلاً لمخطط نتائج V2 القديم،
+    الذي كان يضع n_classes على المستوى الأعلى للنتيجة، وavg_random_
+    baseline_pct/avg_ratio_vs_random داخل summary مباشرة. مخطط V3
+    الجديد (بعد بنود التدقيق) لا يضع أياً من هذه الثلاثة في هذين
+    الموقعين — فكان `res.get('n_classes', 0)` يعيد 0 دائماً،
+    و`summary.get('avg_random_baseline_pct', np.nan)` يعيد NaN دائماً،
+    مما يُسبب إما قيماً صامتة خاطئة (0.0% في ALL_SUMMARY.txt) أو
+    ValueError عند تنسيق '—' كـ float في LaTeX (Table 2).
+
+    الإصلاح: اشتقاق الثلاثة من per_subject مباشرة (موجودة هناك في كلا
+    المخططين) إن غابت عن مواقعها القديمة، بدل الصمت على غيابها.
+    يُعدَّل res['summary'] في مكانه، ويُعاد n_classes المُشتقّ.
+    """
+    per_subject = res.get('per_subject', [])
+    summary = res.setdefault('summary', {})
+
+    if summary.get('avg_random_baseline_pct') in (None,) or \
+            'avg_random_baseline_pct' not in summary:
+        vals = [s['random_baseline_pct'] for s in per_subject
+                if s.get('random_baseline_pct') is not None]
+        summary['avg_random_baseline_pct'] = float(np.mean(vals)) if vals else np.nan
+
+    if summary.get('avg_ratio_vs_random') in (None,) or \
+            'avg_ratio_vs_random' not in summary:
+        vals = [s['ratio_vs_random'] for s in per_subject
+                if s.get('ratio_vs_random') is not None]
+        summary['avg_ratio_vs_random'] = float(np.mean(vals)) if vals else np.nan
+
+    n_classes = res.get('n_classes', 0)
+    if not n_classes:
+        for s in per_subject:
+            fpc = s.get('f1_per_class')
+            if fpc:
+                n_classes = len(fpc)
+                break
+            cm = s.get('confusion_matrix')
+            if cm:
+                n_classes = len(cm)
+                break
+    return n_classes
+
+
 def load_ablation_results(ablation_dir):
     """
     تحميل نتائج الإزالة من مجلد الإزالة.
@@ -216,7 +261,7 @@ def generate_main_results_table(db_data, db_key, output_dir):
 
         summary = res.get('summary', {})
         n_subjects = res.get('n_subjects', 0)
-        n_classes = res.get('n_classes', 0)
+        n_classes = _derive_missing_summary_fields(res)
 
         rows.append({
             'database': db_key,
@@ -284,7 +329,12 @@ def generate_main_results_latex(rows, db_key):
         if acc_vals and row['accuracy_mean'] == max(acc_vals):
             method = r"\textbf{" + method + r"}"
 
-        lines.append(f"{method} & {acc:.2f} & {std:.2f} & {med:.2f} & {mn:.2f} & {mx:.2f} & {rand:.1f}\\% \\\\")
+        lines.append(f"{method} & {acc if isinstance(acc, str) else f'{acc:.2f}'} & "
+                     f"{std if isinstance(std, str) else f'{std:.2f}'} & "
+                     f"{med if isinstance(med, str) else f'{med:.2f}'} & "
+                     f"{mn if isinstance(mn, str) else f'{mn:.2f}'} & "
+                     f"{mx if isinstance(mx, str) else f'{mx:.2f}'} & "
+                     f"{rand if isinstance(rand, str) else f'{rand:.1f}'}\\% \\\\")
 
     lines.extend([
         r"\bottomrule",
@@ -366,13 +416,17 @@ def generate_wilcoxon_table(db_data, db_key, output_dir):
     المخرجات:
         str: مسار الملف المُنشأ.
     """
-    methods = config.METHODS
+    # Centering is excluded from inferential statistics (identical to Raw).
+    # من raw بعد StandardScaler) — يبقى في الجداول الوصفية (Table 2) فقط.
+    methods = list(config.INFERENTIAL_METHODS)
 
-    # بناء مصفوفة الدقة
-    acc_matrix = []
+    # FIX-P06-COMPAT (نفس الاكتشاف أثناء إعادة التشغيل الفعلي): هذه
+    # الدالة كانت تشير إلى `wilcoxon_results` دون أي تعريف سابق له في
+    # النطاق (NameError) — يبدو أنه سطر حساب مفقود من تعديل سابق. يُعاد
+    # بناؤه هنا بنفس نمط مصفوفة الدقة المستخدم في generate_friedman_table
+    # أدناه، ثم استدعاء wilcoxon_pairwise() الموجودة أصلاً في
+    # statistical_utils.py (لم تُعدَّل، وتدعم أي عدد طرق أصلاً).
     subject_ids = []
-
-    # الحصول على قائمة الأشخاص من أول طريقة متاحة
     for method in methods:
         res = db_data.get(method)
         if res is not None:
@@ -382,7 +436,7 @@ def generate_wilcoxon_table(db_data, db_key, output_dir):
     if not subject_ids:
         return None
 
-    # بناء المصفوفة
+    acc_matrix = []
     for method in methods:
         res = db_data.get(method)
         if res is None:
@@ -391,11 +445,9 @@ def generate_wilcoxon_table(db_data, db_key, output_dir):
             acc_map = {s['subject_id']: s.get('accuracy', np.nan) for s in res.get('per_subject', [])}
             acc_col = [acc_map.get(sid, np.nan) for sid in subject_ids]
         acc_matrix.append(acc_col)
-
     acc_matrix = np.array(acc_matrix).T  # (n_subjects, n_methods)
 
-    # اختبار ويلكوكسون
-    wilcoxon_results = wilcoxon_pairwise(acc_matrix, method_names=methods)
+    wilcoxon_results = wilcoxon_pairwise(acc_matrix, methods)
 
     rows = []
     for w in wilcoxon_results:
@@ -468,7 +520,8 @@ def generate_friedman_table(db_data, db_key, output_dir):
     المخرجات:
         str: مسار الملف المُنشأ.
     """
-    methods = config.METHODS
+    # Centering is excluded from inferential statistics (identical to Raw).
+    methods = list(config.INFERENTIAL_METHODS)
 
     # بناء مصفوفة الدقة
     acc_matrix = []
@@ -588,7 +641,8 @@ def generate_holmsidak_table(db_data, db_key, output_dir):
     المخرجات:
         str: مسار الملف المُنشأ.
     """
-    methods = config.METHODS
+    # Centering is excluded from inferential statistics (identical to Raw).
+    methods = list(config.INFERENTIAL_METHODS)
 
     # بناء مصفوفة الدقة
     acc_matrix = []
@@ -699,7 +753,8 @@ def generate_nemenyi_table(db_data, db_key, output_dir):
     المخرجات:
         str: مسار الملف المُنشأ.
     """
-    methods = config.METHODS
+    # Centering is excluded from inferential statistics (identical to Raw).
+    methods = list(config.INFERENTIAL_METHODS)
 
     # بناء مصفوفة الدقة
     acc_matrix = []
@@ -1194,10 +1249,13 @@ def generate_all_summary(all_data, output_dir):
             if res is None:
                 continue
             summary = res.get('summary', {})
+            _derive_missing_summary_fields(res)
             acc = summary.get('mean', 0) * 100
             std = summary.get('std', 0) * 100
             rand = summary.get('avg_random_baseline_pct', 0)
             ratio = summary.get('avg_ratio_vs_random', 0)
+            rand = 0 if (rand is None or (isinstance(rand, float) and np.isnan(rand))) else rand
+            ratio = 0 if (ratio is None or (isinstance(ratio, float) and np.isnan(ratio))) else ratio
 
             label = config.METHOD_LABELS.get(method, method)
             lines.append(f"  {label:<18} {acc:>6.2f}%   {std:>6.2f}%   {rand:>6.1f}%   {ratio:>6.1f}x")

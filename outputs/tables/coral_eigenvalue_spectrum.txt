@@ -1,5 +1,0 @@
-Total eigenvalues: 2000
-Largest: 0.951321
-Smallest: -0.000000006
-Condition number: 9.51e+11
-Near-singular (<10*reg): 1943/2000 (97.2%)

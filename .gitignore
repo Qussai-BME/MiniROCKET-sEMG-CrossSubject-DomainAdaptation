@@ -52,12 +52,10 @@ data/raw/
 
 # Local scratch files (not part of the pipeline)
 /test
+outputs/cache/
 
-# Pre-publication manuscript drafts -- not published yet, kept local only.
-# Remove this rule once the paper is public if you want them in the repo.
-/Paper2_CoverLetter.docx
-/Paper2_MainManuscript.docx
-/Paper2_Supplementary_Material.docx
+# Manuscript files are not part of this repository.
+*.docx
 
 # ── Pipeline-generated artifacts (regenerable from the scripts) ──
 

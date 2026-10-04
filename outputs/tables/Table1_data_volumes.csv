@@ -1,0 +1,4 @@
+database,held_out_subjects,classes,chance_pct,source_subjects_per_fold_min,source_subjects_per_fold_max,source_windows_per_fold_mean,calibration_windows_mean,calibration_windows_min,calibration_windows_max,final_test_windows_mean
+NinaPro DB7,22,40,2.5,11,11,49981,4759,3401,6419,4238
+NinaPro DB3,11,17,5.9,10,10,44997,2827,1713,3613,2222
+NinaPro DB2,40,49,2,11,11,49979,7700,4758,9665,6162

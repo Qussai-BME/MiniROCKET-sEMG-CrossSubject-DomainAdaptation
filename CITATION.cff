@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite it as below."
+title: "MiniROCKET-sEMG-CrossSubject-DomainAdaptation: code and results for a multi-seed benchmark of unsupervised domain adaptation on NinaPro DB2, DB3 and DB7"
+abstract: "Code, per-subject and per-seed results, tables and figures for a subject-held-out benchmark of CORAL, Transfer Component Analysis and Subspace Alignment on reference multivariate MiniROCKET features of surface EMG (NinaPro DB2, DB3, DB7; 73 held-out subjects, five seeds)."
+version: 2.0.0
+license: MIT
+repository-code: "https://github.com/Qussai-BME/MiniROCKET-sEMG-CrossSubject-DomainAdaptation"
+authors:
+  - family-names: Adlbi
+    given-names: Qussai
+    orcid: "https://orcid.org/0009-0000-7667-1992"
+    email: qussai.adlbi@au.edu.sy
+    affiliation: "Al-Andalus University for Medical Sciences, Syria; Pázmány Péter Catholic University, Budapest, Hungary"
+  - family-names: Darwich
+    given-names: Mohamad Ayham
+    email: a.darwich@au.edu.sy
+    affiliation: "Al-Andalus University for Medical Sciences, Syria; Pázmány Péter Catholic University, Budapest, Hungary"
+keywords:
+  - surface electromyography
+  - cross-subject gesture recognition
+  - MiniROCKET
+  - unsupervised domain adaptation
+  - CORAL
+  - NinaPro
