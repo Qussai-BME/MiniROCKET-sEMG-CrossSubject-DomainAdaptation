@@ -1,7 +1,7 @@
 # MiniROCKET sEMG — Cross-Subject Unsupervised Domain Adaptation
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940500.svg)](https://doi.org/10.5281/zenodo.21940500)
-https://zenodo.org/records/21940501
+
 Code, per-subject results, tables and figures for the article
 **"Cross-Subject sEMG Gesture Recognition with Reference MiniROCKET: A Multi-Seed Benchmark of Unsupervised Domain Adaptation on NinaPro DB2, DB3 and DB7"**
 (manuscript under review).
