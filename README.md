@@ -1,141 +1,46 @@
-# MiniROCKET sEMG — Cross-Subject Unsupervised Domain Adaptation
+# MiniROCKET sEMG — Cross-Subject Benchmark of Unsupervised Domain Adaptation (NinaPro DB2, DB3, DB7)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21940500.svg)](https://doi.org/10.5281/zenodo.21940500)
+[![DOI (this version, v2.0.0)](https://zenodo.org/badge/DOI/10.5281/zenodo.23136515.svg)](https://doi.org/10.5281/zenodo.23136515)
+[![DOI (all versions)](https://zenodo.org/badge/DOI/10.5281/zenodo.21940500.svg)](https://doi.org/10.5281/zenodo.21940500)
 
-Code, per-subject results, tables and figures for the article
+Companion code and results of the manuscript
 **"Cross-Subject sEMG Gesture Recognition with Reference MiniROCKET: A Multi-Seed Benchmark of Unsupervised Domain Adaptation on NinaPro DB2, DB3 and DB7"**
-(manuscript under review).
+(Q. Adlbi, M. A. Darwich). **Cite this version:** https://doi.org/10.5281/zenodo.23136515 (the citation of the article will be added once published).
 
-**Authors:** Qussai Adlbi¹ ², Mohamad Ayham Darwich¹ ²
-¹ Al-Andalus University for Medical Sciences, Syria · ² Pázmány Péter Catholic University, Budapest, Hungary
-**Contact:** qussai.adlbi@au.edu.sy
+> **Version note.** v2.0.0 replaces v1.0.0 (https://zenodo.org/records/21940501, *superseded*). v1.0.0 used a hand-written PPV extractor,
+> a CORAL function with two errors (an extra re-colouring of the target and a transposition error in the transform), a window-level
+> within-subject baseline and a single seed. Its numerical results and conclusions are **not** comparable with, and should not be used instead of, those of v2.0.0.
 
-> **Version 2.0.0 supersedes v1.0.0.** The CORAL implementation in v1.0.0 contained two errors, so the
-> v1.0.0 conclusion that CORAL degrades accuracy does not hold and those results should not be used.
-> See [CHANGELOG.md](CHANGELOG.md). The DOI above is the concept DOI and always resolves to the latest version.
+## What this study does
+* Features: the reference **multivariate MiniROCKET** transform (sktime `MiniRocketMultivariate`, 10,000 kernels → 9,996 PPV features) + ridge classifier.
+* Evaluation: **inductive subject-held-out evaluation with a capped source pool ("capped-pool LOSO")** — *not* full LOSO. Each fold uses the first
+  10–11 source subjects in subject-ID order until a 50,000-window cap is reached (DB7: 11 of 21, DB2: 11 of 39, DB3: 10 of 10); 200-ms windows, 50 % overlap.
+* UDA conditions (**CORAL, TCA, SA**) use *unlabeled* calibration repetitions of the held-out subject; calibration and final-test repetitions are disjoint
+  (split by repetition **before** windowing). Target labels are used only offline to build the class-stratified evaluation split.
+* 73 held-out subjects × 5 conditions × 5 seeds (42, 123, 2024, 7, 999) = 1,825 method–fold evaluations. Statistics: subject-level Friedman, paired two-sided Wilcoxon with Holm–Šidák correction, bootstrap CIs.
 
-## What is evaluated
-
-- **Databases:** NinaPro DB2 (40 intact subjects, 49 movements), DB3 (11 transradial amputees, 17 movements), DB7 (20 intact + 2 amputee subjects, 40 movements). The rest class is excluded.
-- **Features:** reference multivariate MiniROCKET (`sktime`), 10,000 kernels → 9,996 PPV features, 200-ms windows, 50 % overlap, fitted on the source windows of each fold.
-- **Conditions:** Raw (inductive), CORAL, Transfer Component Analysis (TCA), Subspace Alignment (SA). An explicit-centering condition is run as a check only; it is numerically identical to Raw and is excluded from inference.
-- **Protocol:** subject-held-out evaluation with a capped, deterministic source pool (≤ 5,000 windows per source subject, 50,000 in total; this is *not* full LOSO). The repetitions of the held-out subject are split, before windowing, into an unlabeled calibration half (the only target data the adaptation methods may use) and a disjoint final-test half on which all methods are scored.
-- **Classifier:** ridge classifier on standardized features, regularization chosen by efficient leave-one-out CV on source labels only.
-- **Seeds:** 42, 123, 2024, 7, 999 → 73 held-out subjects × 5 seeds; 1,825 method–fold evaluations including Centering.
-
-## Main results
-
-Accuracy (%), mean ± SD across subjects of seed-averaged accuracy (article Table 2).
-
+## Main results (mean accuracy over held-out subjects, %; chance = 1/K)
 | Database | Chance | Raw | CORAL | TCA | SA |
 |---|---|---|---|---|---|
-| DB7 (22 subjects, 40 classes) | 2.5 | 20.7 ± 7.1 | **22.0 ± 6.4** | 20.4 ± 6.4 | 7.7 ± 4.7 |
-| DB3 (11 subjects, 17 classes) | 5.9 | 8.9 ± 2.9 | 8.4 ± 2.7 | 9.7 ± 3.1 | 6.1 ± 0.6 |
-| DB2 (40 subjects, 49 classes) | 2.0 | 11.5 ± 3.3 | **12.5 ± 2.3** | 11.2 ± 2.5 | 2.9 ± 0.7 |
+| DB7 (40 classes) | 2.5 | 20.7 | 22.0 | 20.4 | 7.7 |
+| DB3 (17 classes) | 5.9 | 8.9 | 8.4 | 9.7 | 6.1 |
+| DB2 (49 classes) | 2.0 | 11.5 | 12.5 | 11.2 | 2.9 |
 
-- Corrected CORAL reduces the source–target covariance distance by 81–90 % in all 365 fold–seed evaluations, but improves accuracy by only about 1 percentage point at its default regularization (DB7 +1.36 pp, adjusted p = 0.041; DB2 +0.99 pp, p = 0.011; DB3 not detectable). Gains are larger for macro-F1 (+2.5 / +2.0 / +1.8 pp on DB7 / DB3 / DB2).
-- TCA gives no significant accuracy gain; SA lowers accuracy on every database.
-- A descriptive single-seed DB7 sweep shows further CORAL gains at stronger regularization (24.3 % at λ = 0.1), so the default does not exhaust its potential.
+At its pre-specified default regularization (λ = 10⁻³), CORAL reduced source–target covariance distance in all 365 fold–seed evaluations (mean reduction 81–90 %) but raised accuracy by only
++1.36 pp (DB7) and +0.99 pp (DB2), with larger macro-F1 gains; TCA gave no significant accuracy gain; SA reduced accuracy. A descriptive single-seed DB7 sweep did not identify a regularization optimum.
+Full tables, per-subject results, seeds, sensitivity and timing are in the article and its Supplementary Material.
 
-All numbers above are regenerated from the per-subject result files by the scripts in `paper_reproduction/`.
+## Repository guide
+* `config.py`, `data_loader.py`, `subject_split.py`, `feature_extractors.py`, `domain_adaptation.py`, `statistical_utils.py`, `optimized_pipeline.py` — core modules.
+* `p01a_run_main_loso_benchmark.py`, `p08_run_multiseed_sweep.py` — main experiment and multi-seed driver; `p10b_run_sensitivity_feature_reuse.py` — DB7 sensitivity sweep.
+* `p01b_run_within_subject_baseline.py`, `p12_close_paper_gaps.py` — additional experiments **not reported** in the article.
+* `tools/audit_coral_synthetic_figure5.py` — synthetic Gaussian verification of CORAL (Figure 5, Supplementary Table S13). Run: `python tools/audit_coral_synthetic_figure5.py` → expects `PASS` and a 78.5–98.7 % reduction range.
+* `paper_reproduction/` — regenerates every number, table and figure of the article from the result files (see its `README.md`).
+* NinaPro data are **not** included; download them from https://ninapro.hevs.ch and set `NINAPRO_DB2`, `NINAPRO_DB3`, `NINAPRO_DB7`.
 
-## Repository layout
-
-```
-config.py, data_loader.py, feature_extractors.py, minirocket.py,
-domain_adaptation.py, subject_split.py, optimized_pipeline.py, statistical_utils.py   # library code
-
-p08_run_multiseed_sweep.py           # main experiment: all conditions x databases x seeds (uses optimized_pipeline)
-p10_run_sensitivity_analysis.py      # CORAL lambda / TCA, SA dimension sweep (DB7, seed 42)
-
-paper_reproduction/                  # regenerates every table and figure of the article from the shipped results
-    run_all.py                       #   runs the two scripts below
-    p13_article_tables_and_figures.py
-    make_figure5_and_table_s13.py    #   Figure 5 and Table S13 (synthetic CORAL verification)
-
-p01a_run_main_loso_benchmark.py      # single-seed runner; provides apply_adaptation() used by p10
-p01b, p02, p03a-b, p04a-c, p05, p06, p06b, p07   # additional analysis scripts (see note below)
-
-tools/                               # synthetic correctness tests (incl. audit_coral_synthetic_figure5.py) and data diagnostics
-dev_history/                         # archived one-time patch scripts
-outputs/results/                     # results_<db>_<method>__canonical__seed<S>__shared.json  (75 files),
-                                     #   MULTISEED_SUMMARY_*.json, sensitivity_analysis_db7_feature_reuse.json
-outputs/tables/, outputs/figures/    # article tables (CSV) and figures (PNG + PDF)
-```
-
-Note: the scripts `p01b`, `p02`, `p03`–`p07` belong to the analysis pipeline of v1.0.0 and are kept for
-completeness. **The tables and figures of the article are produced by the scripts in `paper_reproduction/` only**; the outputs of the other
-scripts are not part of this release.
-
-### Output files and article items
-
-| File(s) in `outputs/tables/` | Article item |
-|---|---|
-| `Table1_data_volumes` | Table 1 |
-| `Table2_main_results` | Table 2 |
-| `Table3_friedman` | Table 3 (accuracy; balanced accuracy and macro-F1 in the same file) |
-| `Table4_effects_vs_raw` | Table 4 |
-| `Table5_coral_covariance_shift` | Table 5 |
-| `Table6_population_subgroups` | Table 6 |
-| `Table7_sensitivity_db7_seed42` | Table 7 |
-| `TableS_pairwise_contrasts_all_metrics`, `TableS_restricted_family_three_contrasts` | full pairwise tests; three-contrast family |
-| `TableS_per_subject_metrics`, `TableS_per_class_f1`, `TableS_seed_stability`, `TableS_timing` | per-subject, per-class, seed and timing supplements |
-| `TableS_prediction_balance`, `TableS_gain_correlations` | Section 3.5 and Section 3.4 statistics |
-| `TableS13_synthetic_coral` | Supplementary Table S13 (synthetic verification of CORAL) |
-
-Figures `figure2`–`figure12` and `figureS1` in `outputs/figures/` carry the numbers of the corresponding article figures. Figure 1 (study design) is a drawing and is not data-derived.
-
-## Installation and reproduction
-
-```bash
-git clone https://github.com/Qussai-BME/MiniROCKET-sEMG-CrossSubject-DomainAdaptation.git
-cd MiniROCKET-sEMG-CrossSubject-DomainAdaptation
-pip install -r requirements.txt            # Python >= 3.10
-```
-
-**Regenerate every table and figure from the shipped results (no NinaPro data needed):**
-
-```bash
-python paper_reproduction/run_all.py
-```
-
-**Correctness checks (synthetic data, a few minutes):**
-
-```bash
-python tools/audit_coral_synthetic_test.py
-python tools/audit_coral_synthetic_figure5.py      # the five synthetic problems of Figure 5 / Table S13
-python tools/audit_calibration_split_synthetic_test.py
-python tools/audit_dataloader_synthetic_test.py
-```
-
-**Re-run the experiments** (requires the NinaPro download; set `DB_PATHS` in `config.py` first):
-
-```bash
-python p08_run_multiseed_sweep.py --db db7 --extractor canonical --seeds 42,123,2024,7,999 --num_kernels 10000 --output_dir outputs/results
-python p10_run_sensitivity_analysis.py --db db7 --extractor canonical --resume
-python paper_reproduction/run_all.py
-```
-
-A full run is computationally heavy (feature extraction dominates: roughly 6–7 minutes per fold on the hardware used).
-
-## Data availability
-
-NinaPro DB2, DB3 and DB7 are publicly available at <https://ninapro.hevs.ch>. The raw recordings are not redistributed here.
-
-## Not included in this release
-
-- Resume checkpoints, feature caches and run logs (regenerable and large).
-- A within-subject reference, window-size/sample-size ablations, kernel-importance and eigenvalue diagnostics: not reported in the article, and the earlier outputs were produced with the v1.0.0 CORAL implementation.
-
-## Citation
-
-Please cite the article once published and the archived software release; see [CITATION.cff](CITATION.cff).
-Update this section with the final journal reference after acceptance.
-
-## AI-assistance statement
-
-A large language model (Anthropic Claude) was used for code debugging and review and for writing statistical-analysis and figure scripts. All analyses were specified, supervised and verified by the authors, who take full responsibility for the code and results (see the article's declaration).
+## Scope and limitations (see the article)
+Capped, deterministic source pool; class-stratified calibration/test split built with target labels offline (an evaluation convenience, not a deployment protocol);
+CORAL evaluated at its default regularization; offline classification only — no clinical, real-time or embedded claims.
 
 ## License
-
-MIT — see [LICENSE](LICENSE).
+MIT (see `LICENSE`).
